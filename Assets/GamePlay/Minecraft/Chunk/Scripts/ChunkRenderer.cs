@@ -6,11 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class ChunkRenderer : MonoBehaviour
 {
-    private const int Chunk_Weight = 10;
-    private const int Chunk_Height = 128;
-    private const float Block_Scale = 1.5f;
+    public const int Chunk_Width = 10;
+    public const int Chunk_Height = 128;
+    public const float Block_Scale = 1.5f;
 
-    public BlockType[,,] Blocks = new BlockType[Chunk_Weight, Chunk_Height, Chunk_Weight];
+    public ChunkData ChunkData;
 
     private List<Vector3> verticies = new();
     private List<int> triangles = new();
@@ -19,14 +19,16 @@ public class ChunkRenderer : MonoBehaviour
     {
         var chunkMesh = new Mesh();
 
-        Blocks[0,0,0] = BlockType.Grass;
-        Blocks[0,0,1] = BlockType.Grass;
+        // ChunkData.Blocks = TerrainGenerator.GenerateTerrain((int) transform.position.x, (int) transform.position.z);
+
+        // ChunkData.Blocks[0,0,0] = BlockType.Grass;
+        // ChunkData.Blocks[0,0,1] = BlockType.Grass;
 
         for(int y=0; y < Chunk_Height; y++)
         {
-            for(int x=0; x < Chunk_Weight; x++)
+            for(int x=0; x < Chunk_Width; x++)
             {
-                for(int z=0; z < Chunk_Weight; z++)
+                for(int z=0; z < Chunk_Width; z++)
                 {
                     GenerateBlock(x,y,z);
                 }
@@ -61,11 +63,11 @@ public class ChunkRenderer : MonoBehaviour
 
     private BlockType GetBlockAtPosition(Vector3Int blockPosition)
     {
-        if(blockPosition.x >= 0 && blockPosition.x < Chunk_Weight && 
+        if(blockPosition.x >= 0 && blockPosition.x < Chunk_Width && 
            blockPosition.y >= 0 && blockPosition.y < Chunk_Height && 
-           blockPosition.z >= 0 && blockPosition.z < Chunk_Weight)
+           blockPosition.z >= 0 && blockPosition.z < Chunk_Width)
         {
-            return Blocks[blockPosition.x, blockPosition.y, blockPosition.z];
+            return ChunkData.Blocks[blockPosition.x, blockPosition.y, blockPosition.z];
         }
 
         else
